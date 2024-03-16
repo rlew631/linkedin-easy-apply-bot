@@ -5,6 +5,12 @@ export default {
   keywordInput: 'input[id*="jobs-search-box-keyword-id"]',
   locationInput: 'input[id*="jobs-search-box-location-id"]',
 
+  // Job Page description
+  jobPageDescription: "#job-details > span",
+  jobPageTitle: "h1.job-details-jobs-unified-top-card__job-title",
+  companyName: "div.job-details-jobs-unified-top-card__primary-description-without-tagline .app-aware-link",
+  seeMoreButtonSelector: "#ember38",
+
   // Easy apply form
   checkbox: ".jobs-easy-apply-modal input[type='checkbox']",
   fieldset: ".jobs-easy-apply-modal fieldset",
@@ -34,7 +40,7 @@ export default {
   searchResultListText: "small.jobs-search-results-list__text",
   searchResultListItem: ".jobs-search-results-list li.jobs-search-results__list-item",
   searchResultListItemLink: "a.job-card-list__title",
-  searchResultListItemCompanyName: "div.job-card-container__company-name, a.job-card-container__company-name",
+  searchResultListItemCompanyName: "span.job-card-container__primary-description",
   jobDescription: "div.jobs-description-content > div.jobs-description-content__text > span",
   appliedToJobFeedback: ".artdeco-inline-feedback",
 

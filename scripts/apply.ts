@@ -3,8 +3,9 @@ import config from "../config";
 
 import ask from "../utils/ask";
 import login from "../login";
-import apply, { ApplicationFormData } from "../apply";
+// import apply, { ApplicationFormData } from "../apply";
 import fetchJobLinksUser from "../fetch/fetchJobLinksUser";
+import { saveJobDescriptionText } from "../save_job";
 
 interface AppState {
   paused: boolean;
@@ -74,29 +75,40 @@ const askForPauseInput = async () => {
     await applicationPage.bringToFront();
 
     try {
-      const formData: ApplicationFormData = {
-        phone: config.PHONE,
-        cvPath: config.CV_PATH,
-        homeCity: config.HOME_CITY,
-        coverLetterPath: config.COVER_LETTER_PATH,
-        yearsOfExperience: config.YEARS_OF_EXPERIENCE,
-        languageProficiency: config.LANGUAGE_PROFICIENCY,
-        requiresVisaSponsorship: config.REQUIRES_VISA_SPONSORSHIP,
-        booleans: config.BOOLEANS,
-        textFields: config.TEXT_FIELDS,
-        multipleChoiceFields: config.MULTIPLE_CHOICE_FIELDS,
-      };
-
-      await apply({
-        page: applicationPage,
+      if (applicationPage === null) {
+        throw Error("Application page not found");
+      }
+      const job_save_status = await saveJobDescriptionText(
         link,
-        formData,
-        shouldSubmit: process.argv[2] === "SUBMIT",
-      });
+        title,
+        companyName,
+        applicationPage
+      );
+      console.log(job_save_status);
+      // const formData: ApplicationFormData = {
+      //   phone: config.PHONE,
+      //   cvPath: config.CV_PATH,
+      //   homeCity: config.HOME_CITY,
+      //   coverLetterPath: config.COVER_LETTER_PATH,
+      //   yearsOfExperience: config.YEARS_OF_EXPERIENCE,
+      //   languageProficiency: config.LANGUAGE_PROFICIENCY,
+      //   requiresVisaSponsorship: config.REQUIRES_VISA_SPONSORSHIP,
+      //   booleans: config.BOOLEANS,
+      //   textFields: config.TEXT_FIELDS,
+      //   multipleChoiceFields: config.MULTIPLE_CHOICE_FIELDS,
+      // };
 
-      console.log(`Applied to ${title} at ${companyName}`);
-    } catch {
-      console.log(`Error applying to ${title} at ${companyName}`);
+      // await apply({
+      //   page: applicationPage,
+      //   link,
+      //   formData,
+      //   shouldSubmit: process.argv[2] === "SUBMIT",
+      // });
+
+      // console.log(`Applied to ${title} at ${companyName}`);
+    } catch (error) {
+      console.error(`Error applying to ${title} at ${companyName}`);
+      console.error(`Error: ${error}`);
     }
 
     await listingPage.bringToFront();
