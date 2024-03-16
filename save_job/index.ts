@@ -2,6 +2,20 @@ import { Page } from 'puppeteer';
 import selectors from '../selectors';
 import fs from 'fs'; // Node.js file system module for saving the file
 
+function getCurrentDateTime(): string {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+  const day = now.getDate().toString().padStart(2, '0');
+  
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const seconds = now.getSeconds().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`;
+}
+
 async function clickSeeMoreButton(page: Page): Promise<void> {
   await page.waitForSelector(selectors.seeMoreButtonSelector, { timeout: 10000 });
   await page.hover(selectors.seeMoreButtonSelector);
@@ -44,7 +58,8 @@ export async function saveJobDescriptionText(link: string, title: string, compan
 
     // File name format "<companyName>_<jobTitle>.json"
     // Replace any spaces with underscores and remove special characters for file naming
-    const fileName = `${companyName?.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${title.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}.json`;
+    const datetime = getCurrentDateTime();
+    const fileName = `jobs/${datetime}_${companyName?.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}_${title.trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '')}.json`;
 
     fs.writeFileSync(fileName, JSON.stringify(jobDetails, null, 2));
 
